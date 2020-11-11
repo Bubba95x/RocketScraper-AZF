@@ -4,5 +4,10 @@
     "azureFunctions.pythonVenv": ".venv",
     "azureFunctions.projectLanguage": "Python",
     "azureFunctions.projectRuntime": "~3",
-    "debug.internalConsoleOptions": "neverOpen"
+    "debug.internalConsoleOptions": "neverOpen",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "pythonTestExplorer.testFramework": "unittest",
+    "python.linting.flake8Enabled": false,
+    "python.linting.mypyEnabled": false
 }
