@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using API.RocketStats.Dtos;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ProcessPlayerStats.Models;
 using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,15 +27,20 @@ namespace ProcessPlayerStats.Clients
         public async Task<List<PlayerDto>> GetAllPlayersAsync()
         {
             var token = await authClient.ObtainAccessTokenAsync();
-            var request = new RestRequest();
+            var request = new RestRequest(Method.GET);
             request.AddHeader("Authorization", $"Bearer {token}");
 
             return await httpClient.ExecuteRequestAsync<List<PlayerDto>>($"{rocketApiUrl}/api/user/list", request);
         }
 
-        public async Task PostRocketStatsMatchAsync()
+        public async Task PostRocketStatsMatchAsync(Guid userId, RTMatchRequestDto requestDto)
         {
+            var token = await authClient.ObtainAccessTokenAsync();
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddJsonBody(JsonConvert.SerializeObject(requestDto));
 
+            await httpClient.ExecuteRequestAsync($"{rocketApiUrl}/api/RocketTracker/match/user/{userId}", request);
         }
     }
 }

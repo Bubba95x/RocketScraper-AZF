@@ -38,7 +38,8 @@ namespace ProcessPlayerStats.StartUp
             builder.Services.AddSingleton<IHttpClient, HttpClient>();
             builder.Services.AddSingleton<IAuthClient, Auth0Client>();
             builder.Services.AddSingleton<IRocketClient, RocketClient>();
-            builder.Services.AddSingleton<IRocketStatProviderClient, RocketStatsClient>();            
+            builder.Services.AddSingleton<IRocketStatProviderClient, RocketStatsClient>();
+            builder.Services.AddSingleton<IHandler, ProcessPlayerHandler>();
         }        
     }
 }
