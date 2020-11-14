@@ -6,6 +6,6 @@ namespace ProcessPlayerStats.Clients
 {
     public interface IRocketClient
     {
-        Task<List<PlayerModel>> GetAllPlayersAsync();
+        Task<List<PlayerDto>> GetAllPlayersAsync();
     }
 }

@@ -46,7 +46,7 @@ namespace ProcessPlayerStats
         }
 
         [FunctionName("ProcessUser")]
-        public string SayHello([ActivityTrigger] PlayerModel player, ILogger log)
+        public string SayHello([ActivityTrigger] PlayerDto player, ILogger log)
         {
             log.LogInformation($"Saying hello to {player.UserName}.");
             return $"Hello {player.UserName}!";

@@ -30,14 +30,15 @@ namespace ProcessPlayerStats.StartUp
                 .ConfigureKeyVault(kv => kv.SetCredential(creds))
                 .Select(KeyFilter.Any, builtConfig["Environment"]));
             var config = configBuilder.Build();
-            
+
             // Services
+            builder.Services.AddLogging();
             builder.Services.AddSingleton<IConfiguration>(config);
             builder.Services.AddSingleton<IRestClient, RestClient>();
             builder.Services.AddSingleton<IHttpClient, HttpClient>();
-            builder.Services.AddSingleton<IAuth0Client, Auth0Client>();
+            builder.Services.AddSingleton<IAuthClient, Auth0Client>();
             builder.Services.AddSingleton<IRocketClient, RocketClient>();
-            builder.Services.AddLogging();
+            builder.Services.AddSingleton<IRocketStatProviderClient, RocketStatsClient>();            
         }        
     }
 }
