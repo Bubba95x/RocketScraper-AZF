@@ -14,11 +14,13 @@ namespace ProcessPlayerStats
     public class FunctionTriggers
     {
         private readonly IConfiguration config;
+        private readonly IHandler handler;
         private readonly IRocketClient rocketClient;
 
-        public FunctionTriggers(IConfiguration config, IRocketClient rocketClient)
+        public FunctionTriggers(IConfiguration config, IHandler handler, IRocketClient rocketClient)
         {
             this.config = config;
+            this.handler = handler;
             this.rocketClient = rocketClient;
         }
 
@@ -46,10 +48,11 @@ namespace ProcessPlayerStats
         }
 
         [FunctionName("ProcessUser")]
-        public string SayHello([ActivityTrigger] PlayerDto player, ILogger log)
+        public async Task<string> SayHello([ActivityTrigger] PlayerDto player, ILogger log)
         {
             log.LogInformation($"Saying hello to {player.UserName}.");
-            return $"Hello {player.UserName}!";
+            var result = await handler.ProcessEventAsync(player);
+            return $"Hello {result}!";
         }
 
         [FunctionName("Orchestrator_HttpStart")]

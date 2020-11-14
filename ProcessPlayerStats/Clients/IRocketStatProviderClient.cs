@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using ProcessPlayerStats.Dtos;
+using System.Threading.Tasks;
 
 namespace ProcessPlayerStats.Clients
 {
     public interface IRocketStatProviderClient
     {
-        Task GetRecentRocketLeagueSessionsAsync(string userId, string platform);
+        Task<RTSession> GetRecentRocketLeagueSessionsAsync(string userId, string platform);
     }
 }
