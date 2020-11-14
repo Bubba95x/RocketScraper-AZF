@@ -2,7 +2,7 @@
 
 namespace ProcessPlayerStats.Models
 {
-    public class PlayerModel
+    public class PlayerDto
     {
         public Guid Id { get; set; }
         public string UserName { get; set; }

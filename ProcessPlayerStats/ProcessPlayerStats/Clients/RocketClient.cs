@@ -8,26 +8,31 @@ namespace ProcessPlayerStats.Clients
 {
     public class RocketClient : IRocketClient
     {
-        private readonly IAuth0Client auth0Client;
+        private readonly IAuthClient authClient;
         private readonly IHttpClient httpClient;
 
         private readonly string rocketApiUrl;
 
-        public RocketClient(IAuth0Client auth0Client, IConfiguration configuration, IHttpClient httpClient)
+        public RocketClient(IAuthClient authClient, IConfiguration configuration, IHttpClient httpClient)
         {
-            this.auth0Client = auth0Client;
+            this.authClient = authClient;
             this.httpClient = httpClient;
 
             rocketApiUrl = configuration["RocketApi:Url"];
         }
 
-        public async Task<List<PlayerModel>> GetAllPlayersAsync()
+        public async Task<List<PlayerDto>> GetAllPlayersAsync()
         {
-            var token = await auth0Client.ObtainAccessTokenAsync();
+            var token = await authClient.ObtainAccessTokenAsync();
             var request = new RestRequest();
             request.AddHeader("Authorization", $"Bearer {token}");
 
-            return await httpClient.ExecuteRequestAsync<List<PlayerModel>>($"{rocketApiUrl}/api/user/list", request);
+            return await httpClient.ExecuteRequestAsync<List<PlayerDto>>($"{rocketApiUrl}/api/user/list", request);
+        }
+
+        public async Task PostRocketStatsMatchAsync()
+        {
+
         }
     }
 }

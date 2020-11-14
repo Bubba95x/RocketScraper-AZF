@@ -2,7 +2,7 @@
 
 namespace ProcessPlayerStats.Clients
 {
-    public interface IAuth0Client
+    public interface IAuthClient
     {
         Task<string> ObtainAccessTokenAsync();
     }
