@@ -1,4 +1,4 @@
-﻿namespace ProcessPlayerStats.Dtos
+﻿namespace ProcessPlayerStats.Dtos.RTDtos
 {
     public class RTSession
     {

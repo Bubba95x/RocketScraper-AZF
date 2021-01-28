@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ProcessPlayerStats.Models
+namespace ProcessPlayerStats.Dtos.Response
 {
-    public class PlayerDto
+    public class PlayerResponseDto : BaseResponseDto
     {
         public Guid Id { get; set; }
         public string UserName { get; set; }

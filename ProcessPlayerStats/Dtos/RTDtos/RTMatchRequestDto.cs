@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace API.RocketStats.Dtos
+namespace API.RocketStats.Dtos.RTDtos
 {
     public class RTMatchRequestDto
     {

@@ -1,7 +1,6 @@
 ﻿using Azure.Identity;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessPlayerStats.Clients;
 using RestSharp;
@@ -23,23 +22,20 @@ namespace ProcessPlayerStats.StartUp
                 .AddEnvironmentVariables(); // Machine Name etc
 
             var builtConfig = configBuilder.Build();
-            var creds = new DefaultAzureCredential();
 
-            configBuilder.AddAzureAppConfiguration(options => options
-                .Connect(new Uri(builtConfig["AppConfig:Endpoint"]), creds)
-                .ConfigureKeyVault(kv => kv.SetCredential(creds))
-                .Select(KeyFilter.Any, builtConfig["Environment"]));
+            configBuilder.AddAzureKeyVault(new Uri(builtConfig["keyvaulturl"]), new DefaultAzureCredential());
             var config = configBuilder.Build();
 
             // Services
             builder.Services.AddLogging();
+            builder.Services.AddDistributedRedisCache(x => x.Configuration = config["Redis:PrimaryConnectionString"]);
             builder.Services.AddSingleton<IConfiguration>(config);
-            builder.Services.AddSingleton<IRestClient, RestClient>();
-            builder.Services.AddSingleton<IHttpClient, HttpClient>();
-            builder.Services.AddSingleton<IAuthClient, Auth0Client>();
-            builder.Services.AddSingleton<IRocketClient, RocketClient>();
-            builder.Services.AddSingleton<IRocketStatProviderClient, RocketStatsClient>();
-            builder.Services.AddSingleton<IHandler, ProcessPlayerHandler>();
+            builder.Services.AddScoped<IRestClient, RestClient>();
+            builder.Services.AddScoped<IHttpHelperClient, HttpHelperClient>();
+            builder.Services.AddScoped<IAuthClient, IdentityServerAuthClient>();
+            builder.Services.AddScoped<IRocketClient, RocketClientDecorator>();
+            builder.Services.AddScoped<IRocketStatsClient, RocketStatsClient>();
+            builder.Services.AddScoped<IHandler, ProcessPlayerHandler>();
         }        
     }
 }

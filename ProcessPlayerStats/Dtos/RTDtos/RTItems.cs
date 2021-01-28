@@ -1,7 +1,7 @@
-﻿using API.RocketStats.Dtos;
+﻿using API.RocketStats.Dtos.RTDtos;
 using System.Collections.Generic;
 
-namespace ProcessPlayerStats.Dtos
+namespace ProcessPlayerStats.Dtos.RTDtos
 {
     public class RTItems
     {
