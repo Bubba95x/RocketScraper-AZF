@@ -5,10 +5,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  build-and-test:
+    # Job Setup
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -24,3 +23,24 @@ jobs:
     
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+  deploy:
+    # Job Setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      
+      # Login into Azure Client
+      - uses: azure/actions/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      # Create Resources
+      
+      # Deploy Code
+
+      # Post Deployment
