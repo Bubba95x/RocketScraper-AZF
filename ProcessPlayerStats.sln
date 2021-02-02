@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessPlayerStats", "ProcessPlayerStats\ProcessPlayerStats.csproj", "{37C2AA23-0DDC-4FCD-85A0-BC9DD81EF1A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessPlayerStats.UnitTests", "ProcessPlayerStats.UnitTests\ProcessPlayerStats.UnitTests.csproj", "{7BDF0131-CDF3-48D3-A627-DE741E549DB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessPlayerStats.UnitTests", "ProcessPlayerStats.UnitTests\ProcessPlayerStats.UnitTests.csproj", "{7BDF0131-CDF3-48D3-A627-DE741E549DB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{977CB9EC-EC8F-4282-8F67-1272A08BAB46}"
+	ProjectSection(SolutionItems) = preProject
+		azf-template.json = azf-template.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

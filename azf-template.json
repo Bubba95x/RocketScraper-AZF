@@ -1,0 +1,163 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "base_name": {
+      "type": "string",
+      "defaultValue": "statscraper",
+      "metadata": {
+        "description": "base name of the azure function"
+      }
+    }
+  },
+  // Build variables
+  "variables": {
+    "app_insights_name": "[concat('banick-', parameters('base_name'),'-insights')]",
+    "app_service_plan_name": "[concat('banick-', parameters('base_name'), '-asp')]",
+    "azure_function_name": "[concat('banick-', parameters('base_name'), '-azf')]",
+    "storage_account_name": "[concat('banick', parameters('base_name'),'stg')]"
+  },
+  "resources": [
+    // App Insights
+    {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2015-05-01",
+      "name": "[variables('app_insights_name')]",
+      "location": "[resourceGroup().location]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "RetentionInDays": 90
+      }
+    },
+    // Storage Account
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "name": "[variables('storage_account_name')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "Storage",
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "keyType": "Account",
+              "enabled": true
+            },
+            "blob": {
+              "keyType": "Account",
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      }
+    },
+    // App Service Plan
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[variables('app_service_plan_name')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "tier": "Dynamic"
+      },
+      "kind": "functionapp",
+      "properties": {
+        
+      }
+    },
+    // Azure Function App Service
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[variables('azure_function_name')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('app_service_plan_name'))]",
+        "[resourceId('Microsoft.Web/storageAccounts', variables('storage_account_name'))]",
+        "[resourceId('Microsoft.Web/components', variables('app_insights_name'))]"
+      ],
+      "kind": "functionapp",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "enabled": true,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('app_service_plan_name'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+              "value": "~2"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(concat('microsoft.insights/components/', variables('app_insights_name'))).InstrumentationKey]"
+            },
+            // https://anthonychu.ca/post/arm-template-storage-sendgrid - A bit long but a way to reference the keys not in plain text
+            {
+              "name": "AzureWebJobsDashboard",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storage_account_name'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storage_account_name')), '2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storage_account_name'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storage_account_name')), '2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "Environment",
+              "value": "production"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~3"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "dotnet"
+            },
+            {
+              "name": "keyvaulturl",
+              "value": "https://banick-vault.vault.azure.net/"
+            },
+            {
+              "name": "Oauth:Audience",
+              "value": "https://banick-statscraper-azf.azurewebsites.net"
+            },
+            {
+              "name": "OAuth:Domain",
+              "value": "https://banick-tokenservice.azurewebsites.net/connect/token"
+            },
+            {
+              "name": "ProcessPlayerStatsAZF:client_id",
+              "value": "StatScraperAZF"
+            },
+            {
+              "name": "RocketApi:Url",
+              "value": "https://banick-rocket-api.azurewebsites.net"
+            },
+            {
+              "name": "RocketStats:Url",
+              "value": "https://api.tracker.gg"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "banick-statscraper-azf"
+            }
+          ]
+        },
+        "httpsOnly": true,
+        "redundancyMode": "None"
+      }
+    }
+  ]
+}
