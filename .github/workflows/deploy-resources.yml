@@ -5,10 +5,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  build-and-test:
+    # Job Setup
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -24,3 +23,38 @@ jobs:
     
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
+    - name: Publish
+      run: dotnet publish -c Release -o 'artifacts/statscraper'
+
+  deploy:
+    # Job Setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      
+      # Login into Azure Client
+      - uses: azure/actions/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      # Create Resources
+      - name: ARM Deploy - Create App Service Resoures
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: .github/workflows/azf-template.json
+      
+      # Deploy Code
+      - name: Deploy App Service
+        uses: azure/webapps-deploy@v2
+        with: 
+              app-name: ${{ secrets.AZF_NAME }}
+              package: 'artifacts/statscraper'
+      
+      # Post Deployment
