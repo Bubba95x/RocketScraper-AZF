@@ -23,6 +23,9 @@ jobs:
     
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
+    - name: Publish
+      run: dotnet publish -c Release -o 'artifacts/statscraper'
 
   deploy:
     # Job Setup
@@ -40,7 +43,18 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           
       # Create Resources
+      - name: ARM Deploy - Create App Service Resoures
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: .github/workflows/azf-template.json
       
       # Deploy Code
-
+      - name: Deploy App Service
+        uses: azure/webapps-deploy@v2
+        with: 
+              app-name: ${{ secrets.AZF_NAME }}
+              package: 'artifacts/statscraper'
+      
       # Post Deployment
