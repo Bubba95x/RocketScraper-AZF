@@ -84,8 +84,8 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('app_service_plan_name'))]",
-        "[resourceId('Microsoft.Web/storageAccounts', variables('storage_account_name'))]",
-        "[resourceId('Microsoft.Web/components', variables('app_insights_name'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage_account_name'))]",
+        "[resourceId('Microsoft.Insights/components', variables('app_insights_name'))]"
       ],
       "kind": "functionapp",
       "identity": {
