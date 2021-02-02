@@ -70,6 +70,7 @@
       "name": "[variables('app_service_plan_name')]",
       "location": "[resourceGroup().location]",
       "sku": {
+        "name": "[variables('app_service_plan_name')]",
         "tier": "Dynamic"
       },
       "kind": "functionapp",
