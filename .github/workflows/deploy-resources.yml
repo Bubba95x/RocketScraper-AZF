@@ -51,10 +51,17 @@ jobs:
           template: .github/workflows/azf-template.json
       
       # Deploy Code
-      - name: Deploy App Service
-        uses: azure/webapps-deploy@v2
+      - name: Deploy Azure Function
+        uses: Azure/functions-action@v1
         with: 
               app-name: ${{ secrets.AZF_NAME }}
               package: 'artifacts/statscraper'
       
       # Post Deployment
+      - name: Post Deploy Configuration
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            id=$(az webapp identity assign -n ${{ secrets.AZF_NAME }} -g ${{ secrets.AZURE_RG }} | jq -r '.principalId')
+            az keyvault set-policy -n ${{ secrets.VAULT_NAME }} --secret-permissions get list --object-id $id
