@@ -69,13 +69,10 @@
       "apiVersion": "2018-02-01",
       "name": "[variables('app_service_plan_name')]",
       "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "[variables('app_service_plan_name')]",
-        "tier": "Dynamic"
-      },
       "kind": "functionapp",
       "properties": {
-        "name": "[variables('app_service_plan_name')]"
+        "name": "[variables('app_service_plan_name')]",
+        "sku": "Dynamic"
       }
     },
     // Azure Function App Service
