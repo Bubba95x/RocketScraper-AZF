@@ -73,7 +73,7 @@
       },
       "kind": "functionapp",
       "properties": {
-        
+        "name": "[variables('app_service_plan_name')]"
       }
     },
     // Azure Function App Service
