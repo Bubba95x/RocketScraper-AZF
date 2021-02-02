@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "base_name": {
@@ -21,13 +21,14 @@
     // App Insights
     {
       "type": "microsoft.insights/components",
-      "apiVersion": "2015-05-01",
+      "apiVersion": "2018-05-01-preview",
       "name": "[variables('app_insights_name')]",
       "location": "[resourceGroup().location]",
       "kind": "web",
       "properties": {
+        "applicationId": "[variables('app_insights_name')]",
         "Application_Type": "web",
-        "RetentionInDays": 90
+        "RetentionInDays": 30
       }
     },
     // Storage Account

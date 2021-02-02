@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessPlayerStats.UnitTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{977CB9EC-EC8F-4282-8F67-1272A08BAB46}"
 	ProjectSection(SolutionItems) = preProject
-		azf-template.json = azf-template.json
+		.github\workflows\azf-template.json = .github\workflows\azf-template.json
 	EndProjectSection
 EndProject
 Global
