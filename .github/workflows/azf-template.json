@@ -69,6 +69,10 @@
       "apiVersion": "2018-02-01",
       "name": "[variables('app_service_plan_name')]",
       "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic"
+      },
       "kind": "functionapp",
       "properties": {
         "name": "[variables('app_service_plan_name')]",
