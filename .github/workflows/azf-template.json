@@ -73,11 +73,7 @@
         "name": "Y1",
         "tier": "Dynamic"
       },
-      "kind": "functionapp",
-      "properties": {
-        "name": "[variables('app_service_plan_name')]",
-        "sku": "Dynamic"
-      }
+      "kind": "functionapp"
     },
     // Azure Function App Service
     {
